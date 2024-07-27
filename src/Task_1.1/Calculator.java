@@ -47,20 +47,37 @@ public class Calculator extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if (Character.isDigit(command.charAt(0))) {
-            displayField.setText(displayField.getText() + command);
-        } else if (command.equals(".")) {
-            if (!displayField.getText().contains(".")) {
-                displayField.setText(displayField.getText() + ".");
-            }
-        } else if (command.equals("=")) {
-            num2 = Double.parseDouble(displayField.getText());
-            double result = performOperation(num1, num2, operator);
-            displayField.setText(String.valueOf(result));
-        } else {
-            num1 = Double.parseDouble(displayField.getText());
-            operator = command;
-            displayField.setText("");
+        switch (command) {
+            case "AC":
+                displayField.setText("");
+                num1 = num2 = 0;
+                operator = "";
+                break;
+            case "C":
+                displayField.setText("");
+                break;
+            case "%":
+                num1 = Double.parseDouble(displayField.getText());
+                displayField.setText(String.valueOf(num1 / 100));
+                break;
+            case "=":
+                num2 = Double.parseDouble(displayField.getText());
+                double result = performOperation(num1, num2, operator);
+                displayField.setText(String.valueOf(result));
+                break;
+            case "+":
+            case "-":
+            case "x":
+            case "/":
+                operator = command;
+                num1 = Double.parseDouble(displayField.getText());
+                displayField.setText("");
+                break;
+            default:
+                if (Character.isDigit(command.charAt(0)) || command.equals(".")) {
+                    displayField.setText(displayField.getText() + command);
+                }
+                break;
         }
     }
 
@@ -70,18 +87,13 @@ public class Calculator extends JFrame implements ActionListener {
                 return a + b;
             case "-":
                 return a - b;
-            case "*":
+            case "x":
                 return a * b;
             case "/":
-                if (b != 0) {
-                    return a / b;
-                } else {
-                    return Double.NaN; // Handle division by zero
-                }
+                return b != 0 ? a / b : Double.NaN;
             default:
-                return Double.NaN; // Invalid operator
+                return Double.NaN;
         }
     }
 
-   
 }
